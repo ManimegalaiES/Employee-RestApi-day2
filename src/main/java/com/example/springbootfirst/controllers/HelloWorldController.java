@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/employee")
@@ -26,21 +27,31 @@ public class HelloWorldController {
         return hws.getEmployeeById(empid);
     }
 
+    @GetMapping("/job/{job}")
+    public List<Employee> getEmployeeByJob(@PathVariable String job)
+    {
+        return hws.getEmployeeByJob(job);
+    }
+
     @PostMapping
     public String postMethod(@RequestBody Employee employee){
         hws.postmethodhws(employee);
         return "Employee added successfully";
     }
-    @PutMapping("/{empid}")
+
+    @PutMapping
     public String putMethod(@RequestBody Employee employee){
         return hws.putMethod(employee);
     }
+
     @DeleteMapping
     public String DeleteMethod(){
         return hws.DeleteMethod();
     }
+
     @DeleteMapping("/{empid}")
-    public void DeleteById(@PathVariable int empid){
+    public String DeleteById(@PathVariable int empid){
         hws.DeleteById(empid);
+        return "Employee deleted successfully";
     }
 }
