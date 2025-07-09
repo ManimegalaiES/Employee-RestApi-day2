@@ -34,14 +34,14 @@ public class HelloWorldService {
         return "Employee Added Successfully";
     }
 
-    public String putMethod(Employee employee) {
-        if (empRepo.existsById(employee.getEmpid())) {
-            empRepo.save(employee);
-            return "Employee Updated Successfully";
-        } else {
-            return "Employee ID does not exist, cannot update";
-        }
-    }
+//    public String putMethod(Employee employee) {
+//        if (empRepo.existsById(employee.getEmpid())) {
+//            empRepo.save(employee);
+//            return "Employee Updated Successfully";
+//        } else {
+//            return "Employee ID does not exist, cannot update";
+//        }
+//    }
 
     public String DeleteMethod() {
         empRepo.deleteAll();

@@ -9,47 +9,52 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/employee")
+//@RequestMapping("/employee")
 public class HelloWorldController {
 
     @Autowired
     private HelloWorldService hws;
 
-    @GetMapping
+    @GetMapping("/")
+    public String routes(){
+        return "Welcome to spring boot security";
+    }
+
+    @GetMapping("/employee")
     public List<Employee> getMethod(){
 
         return hws.getMethod();
     }
 
-    @GetMapping("/{empid}")
+    @GetMapping("/employee/{empid}")
     public Employee getEmployeeById(@PathVariable int empid)
     {
         return hws.getEmployeeById(empid);
     }
 
-    @GetMapping("/job/{job}")
+    @GetMapping("/employee/job/{job}")
     public List<Employee> getEmployeeByJob(@PathVariable String job)
     {
         return hws.getEmployeeByJob(job);
     }
 
-    @PostMapping
+    @PostMapping("/employee")
     public String postMethod(@RequestBody Employee employee){
         hws.postmethodhws(employee);
         return "Employee added successfully";
     }
 
-    @PutMapping
-    public String putMethod(@RequestBody Employee employee){
-        return hws.putMethod(employee);
-    }
+//    @PutMapping("/employee")
+//    public String putMethod(@RequestBody Employee employee){
+//        return hws.putMethod(employee);
+//    }
 
-    @DeleteMapping
+    @DeleteMapping("/employee")
     public String DeleteMethod(){
         return hws.DeleteMethod();
     }
 
-    @DeleteMapping("/{empid}")
+    @DeleteMapping("/employee/{empid}")
     public String DeleteById(@PathVariable int empid){
         hws.DeleteById(empid);
         return "Employee deleted successfully";
