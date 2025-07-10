@@ -33,4 +33,7 @@ public class RegisterDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "roleId")
     )
     private Set<Roles> roles;
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
+    private Set<Todo> todos;
+
 }
