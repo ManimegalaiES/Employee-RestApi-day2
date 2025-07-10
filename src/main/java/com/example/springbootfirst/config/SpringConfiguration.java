@@ -33,7 +33,10 @@ public class SpringConfiguration {
 //              auth.requestMatchers(HttpMethod.PUT,"/employee").hasRole("ADMIN");
 //              auth.requestMatchers(HttpMethod.DELETE,"/employee").hasRole("ADMIN");
 //              auth.requestMatchers(HttpMethod.GET,"/**").hasAnyRole("ADMIN","USER");
-                    auth.requestMatchers("/api/auth/register","/api/auth/login").permitAll();
+                    auth.requestMatchers("/api/auth/register",
+                            "/api/auth/login",
+                            "/api/auth/roles/**",
+                            "/api/auth/**").permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .httpBasic(Customizer.withDefaults());

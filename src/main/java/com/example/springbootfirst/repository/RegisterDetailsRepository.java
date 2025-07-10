@@ -2,8 +2,11 @@ package com.example.springbootfirst.repository;
 
 import com.example.springbootfirst.models.RegisterDetails;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -11,4 +14,6 @@ public interface RegisterDetailsRepository extends JpaRepository<RegisterDetails
     RegisterDetails findByEmail(String email);
 
     Optional<RegisterDetails> findByUserName(String userName);
+
+    List<RegisterDetails> findByRolesRoleName(String role);
 }

@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -24,4 +26,16 @@ public class AuthController {
         return authService.authenticate(login);
     }
 
+    //    put - update data
+    // @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{id}")
+    public String updateEmployee(@PathVariable int id, @RequestBody RegisterDetails emp){
+        return authService.updateEmployee(id,emp);
+    }
+
+    //getbyroles
+    @GetMapping("/roles/{roles}")
+    public List<RegisterDetails> getEmployeeByRole(@PathVariable String roles){
+        return authService.getAllEmployeesByRoleSer(roles);
+    }
 }

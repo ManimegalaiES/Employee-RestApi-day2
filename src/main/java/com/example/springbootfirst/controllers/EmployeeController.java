@@ -23,6 +23,8 @@ public class EmployeeController {
     }
 
 
+
+
     @GetMapping("/employee")
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public List<RegisterDetails> getMethod(){

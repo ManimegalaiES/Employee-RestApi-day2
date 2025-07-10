@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -42,6 +44,16 @@ public class AuthService {
         registerDetailsRepository.save(registerDetails);
         return "Employee Added Successfully";
     }
+
+    public String updateEmployee(int id , RegisterDetails registerDetails){
+        registerDetailsRepository.save(registerDetails);
+        return "Employee updated successfully";
+    }
+    public List<RegisterDetails> getAllEmployeesByRoleSer(String role) {
+        return registerDetailsRepository.findByRolesRoleName(role);
+    }
+
+
 
     public String authenticate(RegisterDetails login) {
         RegisterDetails user = registerDetailsRepository.findByEmail(login.getEmail());
