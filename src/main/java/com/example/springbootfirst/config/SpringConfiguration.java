@@ -29,27 +29,28 @@ public class SpringConfiguration {
         http
                 .csrf((csrf)->csrf.disable())
                 .authorizeHttpRequests(auth-> {
-//                    auth.requestMatchers(HttpMethod.POST,"/employee").hasRole("ADMIN");
-//                    auth.requestMatchers(HttpMethod.PUT,"/employee").hasRole("ADMIN");
-//                    auth.requestMatchers(HttpMethod.DELETE,"/employee").hasRole("ADMIN");
-//                    auth.requestMatchers(HttpMethod.GET,"/**").hasAnyRole("ADMIN","USER");
-                      auth.anyRequest().authenticated();
+//              auth.requestMatchers(HttpMethod.POST,"/employee").hasRole("ADMIN");
+//              auth.requestMatchers(HttpMethod.PUT,"/employee").hasRole("ADMIN");
+//              auth.requestMatchers(HttpMethod.DELETE,"/employee").hasRole("ADMIN");
+//              auth.requestMatchers(HttpMethod.GET,"/**").hasAnyRole("ADMIN","USER");
+                    auth.anyRequest().authenticated();
                 })
                 .httpBasic(Customizer.withDefaults());
         return http.build();
     }
-    @Bean
-    UserDetailsService userDetails(){
-        UserDetails admin = User.builder()
-                .username("admin")
-                 .password(passwordEncoder().encode("admin"))
-                .roles("ADMIN")
-                .build();
-        UserDetails mani = User.builder()
-                .username("mani")
-                .password(passwordEncoder().encode("mani"))
-                .roles("USER")
-                .build();
-        return new InMemoryUserDetailsManager(admin,mani);
-    }
+
+//  @Bean
+//  UserDetailsService userDetailsService(){
+//    UserDetails admin = User.builder()
+//            .username("admin")
+//            .password(passwordEncoder().encode("admin"))
+//            .roles("ADMIN")
+//            .build();
+//    UserDetails ksp = User.builder()
+//            .username("mani")
+//            .password(passwordEncoder().encode("mani"))
+//            .roles("USER")
+//            .build();
+//    return new InMemoryUserDetailsManager(admin,mani);
+//  }
 }
