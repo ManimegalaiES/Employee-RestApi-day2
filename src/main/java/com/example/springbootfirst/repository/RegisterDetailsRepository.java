@@ -12,8 +12,7 @@ import java.util.Optional;
 @Repository
 public interface RegisterDetailsRepository extends JpaRepository<RegisterDetails,Integer> {
     RegisterDetails findByEmail(String email);
-
     Optional<RegisterDetails> findByUserName(String userName);
-
-    List<RegisterDetails> findByRolesRoleName(String role);
+    List<RegisterDetails> findByRolesRoleName(String roleName);
 }
+

@@ -1,67 +1,115 @@
 package com.example.springbootfirst.services;
 
+import com.example.springbootfirst.jwt.JwtTokenProvider;
 import com.example.springbootfirst.models.RegisterDetails;
 import com.example.springbootfirst.models.Roles;
+import com.example.springbootfirst.models.Todo;
 import com.example.springbootfirst.models.UserDetailsDto;
 import com.example.springbootfirst.repository.RegisterDetailsRepository;
+import com.example.springbootfirst.repository.RegisterRepository;
 import com.example.springbootfirst.repository.RolesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
 
 @Service
 public class AuthService {
 
     @Autowired
-    RegisterDetailsRepository registerDetailsRepository;
+    RegisterRepository registerRepository;
 
     @Autowired
-    RolesRepository rolesRepository;
+    private AuthenticationManager authenticationManager;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private RegisterDetailsRepository registerDetailsRepository;
+
+    @Autowired
+    private RolesRepository rolesRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    JwtTokenProvider jwtTokenProvider;
 
     public String addNewEmployee(UserDetailsDto register) {
         RegisterDetails registerDetails = new RegisterDetails();
-        registerDetails.setEmpId(register.getEmpId());
+        registerDetails.setEmpID(register.getEmpID());
         registerDetails.setName(register.getName());
         registerDetails.setEmail(register.getEmail());
         registerDetails.setPassword(passwordEncoder.encode(register.getPassword()));
         registerDetails.setUserName(register.getUserName());
         Set<Roles> roles = new HashSet<>();
-        for(String roleName: register.getRoleNames()){
+        for (String roleName : register.getRoleName()) {
             Roles role = rolesRepository.findByRoleName(roleName)
-                    .orElseThrow(()->new RuntimeException("User not found" + roleName));
+                    .orElseThrow(() -> new RuntimeException("ROLE NOT FOUND: " + roleName));
             roles.add(role);
         }
         registerDetails.setRoles(roles);
-        System.out.println("Registration"+ registerDetails);
+
         registerDetailsRepository.save(registerDetails);
-        return "Employee Added Successfully";
+        return "Employee added successfully";
     }
 
-    public String updateEmployee(int id , RegisterDetails registerDetails){
-        registerDetailsRepository.save(registerDetails);
-        return "Employee updated successfully";
+//    public String authenticate(RegisterDetails login) {
+//        RegisterDetails user = registerDetailsRepository.findByEmail(login.getEmail());
+//        if (user != null) {
+//            if (passwordEncoder.matches(login.getPassword(), user.getPassword())) {
+//                return "Login successful";
+//            }
+//        }
+//        return "Login not successful";
+//    }
+
+
+
+    public String updateUser(int id, UserDetailsDto register) {
+        RegisterDetails user = registerDetailsRepository.findById(id).orElseThrow(() -> new RuntimeException("ID NOT FOUND: " + id));
+        ;
+        user.setName(register.getName());
+        user.setEmail(register.getEmail());
+        user.setPassword(passwordEncoder.encode(register.getPassword()));
+        user.setUserName(register.getUserName());
+        Set<Roles> newRoles = new HashSet<>();
+        for (String roleName : register.getRoleName()) {
+            Roles role = rolesRepository.findByRoleName(roleName).orElseThrow(() -> new RuntimeException("ROLE NOT FOUND: " + roleName));
+            newRoles.add(role);
+        }
+        user.setRoles(newRoles);
+        registerDetailsRepository.save(user);
+        return "User updated successfully";
     }
-    public List<RegisterDetails> getAllEmployeesByRoleSer(String role) {
-        return registerDetailsRepository.findByRolesRoleName(role);
-    }
 
-
-
-    public String authenticate(RegisterDetails login) {
-        RegisterDetails user = registerDetailsRepository.findByEmail(login.getEmail());
-        if(user != null){
-            if (passwordEncoder.matches(login.getPassword(),user.getPassword())){
-                return "Login Successful";
+    public List<RegisterDetails>getUsersByRole(String roleName) {
+        Roles role=rolesRepository.findByRoleName(roleName)
+                .orElseThrow(()->new RuntimeException("ROLE NOT FOUND: "+roleName));
+        List<RegisterDetails>users=new ArrayList<>();
+        for (RegisterDetails user : registerDetailsRepository.findAll()) {
+            for (Roles roles : user.getRoles()) {
+                if (roles.getRoleName().equals(role.getRoleName())) {
+                    users.add(user);
+                    break;
+                }
             }
         }
-        return "Login Not Successful";
+        return users;
+    }
+
+    public String authenticate(RegisterDetails login) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        login.getUserName(),login.getPassword()));
+        return jwtTokenProvider.generateToken(authentication);
+    }
+    public Optional<RegisterDetails> getUserNyUserName(String username){
+        return registerRepository.findByUserName(username);
     }
 }
