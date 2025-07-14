@@ -4,34 +4,30 @@ import com.example.springbootfirst.models.RegisterDetails;
 import com.example.springbootfirst.models.UserDetailsDto;
 import com.example.springbootfirst.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("api/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
+
     @Autowired
-    AuthService authService;
+    private AuthService authService;
+
+    @GetMapping
+    public List<RegisterDetails> getRegisterDetails(){
+        return authService.getRegisterDetails();
+    }
+
     @PostMapping("/register")
-    public String addNewUser(@RequestBody UserDetailsDto register){
-        return authService.addNewEmployee(register);
-
-    }
-    @PutMapping("/update/{id}")
-    public String updateUser(@PathVariable int id, @RequestBody UserDetailsDto register) {
-        return authService.updateUser(id,register);
-    }
-    @GetMapping("/users/{roleName}")
-    public List<RegisterDetails> getUsersByRole(@PathVariable String roleName) {
-        return authService.getUsersByRole(roleName);
+    public String addNewUser(@RequestBody UserDetailsDto register) {
+        return authService.addNewUser(register);
     }
 
-
-    @PostMapping ("/login")
-    public String Login(@RequestBody RegisterDetails login){
-        return authService.authenticate(login);
-
+    @PostMapping("/login")
+    public String login(@RequestBody RegisterDetails login) {
+        return authService.loginUser(login);
     }
+
 }

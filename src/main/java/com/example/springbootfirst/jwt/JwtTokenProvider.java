@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.Date;
 
+
 @Component
 public class JwtTokenProvider {
     @Value("${app.jwt-secret}")
@@ -20,20 +21,25 @@ public class JwtTokenProvider {
     @Value("${app.jwt-expiration-milliseconds}")
     private long jwtExpirationMilliSeconds;
 
+
     private Key secretKey() {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
 
+
     public String generateToken(Authentication authenticate){
-        UserDetails userPrincipal = (UserDetails) authenticate.getPrincipal();
-        return Jwts.builder()
+        UserDetails userPrincipal= (UserDetails) authenticate.getPrincipal();
+        return Jwts.builder()              //to generate json web token ,built and compact it
                 .setSubject(userPrincipal.getUsername())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis()+jwtExpirationMilliSeconds))
-                .signWith(secretKey(),SignatureAlgorithm.HS256)
+                .signWith(secretKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
-    public String getUsernameFromToken(String token){
+
+
+    //to get username from token
+    public  String getUserNameFromToken(String token){
         return Jwts.parserBuilder()
                 .setSigningKey(secretKey())
                 .build()
@@ -41,7 +47,11 @@ public class JwtTokenProvider {
                 .getBody()
                 .getSubject();
     }
-    public boolean vaildateToken(String token){
+
+
+
+
+    public boolean validateToken(String token){
         try{
             Jwts.parserBuilder()
                     .setSigningKey(secretKey())
@@ -53,4 +63,5 @@ public class JwtTokenProvider {
         }
         return false;
     }
+
 }
